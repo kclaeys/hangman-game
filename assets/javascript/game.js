@@ -32,6 +32,8 @@ function underscore(){
 		letter.textContent += "_";
 		playArea.push(letter);
 		hangmanWord.appendChild(letter);
+		var newId = "letter" + [i]
+		playArea[i].setAttribute("id", newId);
 	}
 }
 
@@ -54,12 +56,14 @@ function startGame(event){
 document.onkeypress = function(event){
 	console.log(event.key);
 	for(i = 0; i < wordInPlay.length; i++){
-		playArea[i].setAttribute("id", "\"letter+[i]")
 		if (event.key === wordInPlay[i]){
-			console.log("correct")
+			console.log("correct");
 			
-			;
 		}
+	}
+	if (playArea === wordInPlay){
+		console.log("win");
+		alert("You Win!");
 	}
 }
 
