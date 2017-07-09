@@ -9,14 +9,14 @@ var hangmanGuesses = 12;
 var guessArea = document.getElementById("guess-area");
 var previousGuesses = document.getElementById("previous-guesses");
 var newWord = document.getElementById("new-word");
-var wordInPlay = [
+var wordArray = [
 	"apple",
 	"orange",
 	"pear",
 	"apricot"
 	];
-var wordNumber = 0;
-var wordArray = wordInPlay[wordNumber].split("");
+var wordInPlay = wordArray[Math.floor(Math.random() * wordArray.length)];
+var playArea = [];
 
 //load state//
 hangmanPrompt.textContent = "Press any key to get started!";
@@ -26,34 +26,46 @@ guessArea.style.display = "none";
 newWord.style.display = "none";
 
 //something that turns the length of the word into underscores//
-function underscore(event){
-	var i;
-	for (i = 0; i < wordArray.length; i++){
-		wordArray[i] = "_"
-		hangmanWord.innerHTML = wordArray;
-		if (event.key == wordInPlay[0]){
-			console.log("correct");
-			wordArray[i] = event.key;
-		}
+function underscore(){
+	for (i = 0; i < wordInPlay.length; i++){
+		var letter = document.createElement("span");
+		letter.textContent += "_";
+		playArea.push(letter);
+		hangmanWord.appendChild(letter);
 	}
 }
 
 //once any key is pressed then we start the game//
+window.onload = function (){
+	document.addEventListener("keypress", startGame, false);
+}
+
 function startGame(event){
-	console.log(event.key);
+	document.removeEventListener("keypress", startGame, false);
 	hangmanPrompt.textContent = "This is your word, try to guess it before you run out of guesses!";
 	hangmanWord.style.display = "block";
-	underscore(event);
 	hangmanCounter.style.display = "block";
 	document.getElementById("hangman-guesses").textContent = hangmanGuesses;
 	guessArea.style.display = "block";
 	newWord.style.display = "block";
+	underscore(event);
 };
+
+document.onkeypress = function(event){
+	console.log(event.key);
+	for(i = 0; i < wordInPlay.length; i++){
+		playArea[i].setAttribute("id", "\"letter+[i]")
+		if (event.key === wordInPlay[i]){
+			console.log("correct")
+			
+			;
+		}
+	}
+}
 
 //correct guesses get displayed//
 /*function guessDisplay(event){
-	if (event.key == wordArray[0]){
-		hangmanWord.innerHTML = wordArray.splice(0,1,wordArray[0]);
+	
 	}
 }*/
 
@@ -65,19 +77,9 @@ function startGame(event){
 };*/
 
 //all functions based on key presses//
-document.onkeypress = function(event){
-	startGame(event);
-	/*guessCounter(event);*/
-};
 
 //click to get a new word//
-newWord.onclick = function getNewWord(event){
+/*newWord.onclick = function getNewWord(event){
 	console.log("this button works");
-	if (wordNumber == wordInPlay.length - 1){
-		wordNumber = 0
-	} else {
-		wordNumber++;
-	};
-	var wordArray = wordInPlay[wordNumber].split("");
-	hangmanGuesses == 12;
-}
+	location.reload(false);
+}*/
