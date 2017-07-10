@@ -13,10 +13,17 @@ var wordArray = [
 	"apple",
 	"orange",
 	"pear",
-	"apricot"
+	"apricot",
+	"watermelon",
+	"guava",
+	"avocado",
+	"plum"
 	];
-var wordInPlay = wordArray[Math.floor(Math.random() * wordArray.length)];
+var j = Math.floor(Math.random() * wordArray.length)
+var wordInPlay = wordArray[j];
 var playArea = [];
+var newPlayArea = [];
+var guessedArray = [];
 
 //load state//
 hangmanPrompt.textContent = "Press any key to get started!";
@@ -28,11 +35,11 @@ newWord.style.display = "none";
 //something that turns the length of the word into underscores//
 function underscore(){
 	for (i = 0; i < wordInPlay.length; i++){
-		var letter = document.createElement("span");
-		letter.textContent += "_";
-		playArea.push(letter);
-		hangmanWord.appendChild(letter);
-		var newId = "letter" + [i]
+		var underscore = document.createElement("span");
+		underscore.textContent += "_";
+		playArea.push(underscore);
+		hangmanWord.appendChild(underscore);
+		var newId = "underscore" + [i]
 		playArea[i].setAttribute("id", newId);
 	}
 }
@@ -46,6 +53,7 @@ function startGame(event){
 	document.removeEventListener("keypress", startGame, false);
 	hangmanPrompt.textContent = "This is your word, try to guess it before you run out of guesses!";
 	hangmanWord.style.display = "block";
+	var j = Math.floor(Math.random() * wordArray.length)
 	hangmanCounter.style.display = "block";
 	document.getElementById("hangman-guesses").textContent = hangmanGuesses;
 	guessArea.style.display = "block";
@@ -53,37 +61,77 @@ function startGame(event){
 	underscore(event);
 };
 
-document.onkeypress = function(event){
+//correct guesses get displayed//
+function correctGuess(event){
 	console.log(event.key);
 	for(i = 0; i < wordInPlay.length; i++){
+		var letter = document.getElementById("underscore"+i);
 		if (event.key === wordInPlay[i]){
 			console.log("correct");
-			
+			letter.textContent = wordInPlay[i];
 		}
-	}
-	if (playArea === wordInPlay){
-		console.log("win");
-		alert("You Win!");
 	}
 }
 
-//correct guesses get displayed//
-/*function guessDisplay(event){
-	
+//wrong guesses cound down//
+/*function wrongGuess(event){
+	for(i = 0; i < wordInPlay.length; i++){
+		if (event.key !== wordInPlay[i]){
+			console.log("incorrect");
+			hangmanGuesses--;
+			document.getElementById("hangman-guesses").textContent = hangmanGuesses;
+		}
+		if (hangmanGuesses == 0){
+			console.log("lost")
+			alert("You Lost!");
+		}
+	}
+};*/
+
+/*function winOrLose(){
+	for(i = 0; i < wordInPlay.length; i++){
+		var playWord = document.getElementById("underscore"+i).textContent;
+	}
+	if (playWord === wordInPlay){
+		console.log("win");
 	}
 }*/
 
-//wrong guesses cound down//
-/*function guessCounter(event){
-	if (event.key !== )
-	console.log("counter works")
-	hangmanGuesses--;
-};*/
+function alreadyGuessed(event){
+	console.log("counter works");
+	for(i = 0; i < guessedArray.lenth; i++){
+		var keyIn = document.createElement("span");
+		keyIn.textContent += event.key
+		if(keyIn !== guessedArray[i]){
+			guessedArray.push(keyIn);
+			previousGuesses.appendChild(keyIn);
+		}
+	}
+}
 
 //all functions based on key presses//
+document.onkeypress = function(event){
+	event.key = event.key.toLowerCase();
+	correctGuess(event);
+	/*winOrLose(event);*/
+	alreadyGuessed(event);
+	/*wrongGuess(event);*/
+}
 
 //click to get a new word//
-/*newWord.onclick = function getNewWord(event){
+newWord.onclick = function reStartGame(event){
 	console.log("this button works");
-	location.reload(false);
-}*/
+	j = Math.floor(Math.random() * wordArray.length);
+	wordInPlay = wordArray[j];
+	for (i = 0; i < wordInPlay.length; i++){
+		hangmanWord.removeChild(document.getElementById("underscore"+i));
+		console.log("forloop works");
+	}
+}
+
+/*var newUnderscore = document.createElement("span");
+	newUnderscore.textContent += "_";
+	newPlayArea.push(newUnderscore);
+	hangmanWord.appendChild(newUnderscore);
+	var newId = "underscore" + [i];
+	newPlayArea[i].setAttribute("id", newId);*/
