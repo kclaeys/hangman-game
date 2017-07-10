@@ -74,8 +74,8 @@ function correctGuess(event){
 }
 
 //wrong guesses cound down//
-/*function wrongGuess(event){
-	for(i = 0; i < wordInPlay.length; i++){
+function wrongGuess(event){
+	for(i = 0; i < 1; i++){
 		if (event.key !== wordInPlay[i]){
 			console.log("incorrect");
 			hangmanGuesses--;
@@ -86,7 +86,7 @@ function correctGuess(event){
 			alert("You Lost!");
 		}
 	}
-};*/
+};
 
 /*function winOrLose(){
 	for(i = 0; i < wordInPlay.length; i++){
@@ -99,10 +99,10 @@ function correctGuess(event){
 
 function alreadyGuessed(event){
 	console.log("counter works");
-	for(i = 0; i < guessedArray.lenth; i++){
+	for(i = 0; i < 1; i++){
 		var keyIn = document.createElement("span");
-		keyIn.textContent += event.key
-		if(keyIn !== guessedArray[i]){
+		if(event.key !== guessedArray[i]){
+			keyIn.textContent += event.key
 			guessedArray.push(keyIn);
 			previousGuesses.appendChild(keyIn);
 		}
@@ -115,7 +115,7 @@ document.onkeypress = function(event){
 	correctGuess(event);
 	/*winOrLose(event);*/
 	alreadyGuessed(event);
-	/*wrongGuess(event);*/
+	wrongGuess(event);
 }
 
 //click to get a new word//
