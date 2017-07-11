@@ -123,12 +123,10 @@ function winCounting(event){
 		}
 	}
 
-//this function is supposed to display all my already guessed letters in an area of the page, but right now it repeats letters//
+//this function displays already guessed letters//
 function alreadyGuessed(event){
-	for(i = 0; i < 1; i++){
-		if(event.key !== previousGuesses.innerHTML[i]){
-			previousGuesses.innerHTML += event.key;
-		}
+	if(previousGuesses.innerHTML.indexOf(event.key) === -1){
+		previousGuesses.innerHTML += event.key;
 	}
 }
 
