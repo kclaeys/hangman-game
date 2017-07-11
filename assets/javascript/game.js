@@ -1,6 +1,6 @@
-//psudocode this shite! so we'll go for hangman//
+//To whomever has decided to help me and sees this, thank you for the help and sorry the code isn't the best//
 
-//we need to call our variables//
+//I just sorta named all my variables on the fly, there barely any rhyme or reason to the name choices, I hope they don't confuse you//
 var hangmanArea = document.getElementById("hangman-area");
 var hangmanPrompt = document.getElementById("hangman-prompt");
 var hangmanWord = document.getElementById("hangman-word");
@@ -25,27 +25,16 @@ var j = Math.floor(Math.random() * wordArray.length)
 var wordInPlay = wordArray[j];
 var playArea = [];
 var newPlayArea = [];
+var correct = null;
 var win = null;
 
-//load state//
+//what shows up before a key is pressed to start the game//
 hangmanPrompt.textContent = "Press any key to get started!";
 hangmanWord.style.display = "none";
 hangmanCounter.style.display = "none";
 guessArea.style.display = "none";
 newWord.style.display = "none";
 winCounter.style.display = "none";
-
-//something that turns the length of the word into underscores//
-function underscore(){
-	for (i = 0; i < wordInPlay.length; i++){
-		var underscore = document.createElement("span");
-		underscore.textContent = "_";
-		playArea.push(underscore);
-		hangmanWord.appendChild(underscore);
-		var newId = "underscore" + [i]
-		playArea[i].setAttribute("id", newId);
-	}
-}
 
 //once any key is pressed then we start the game//
 window.onload = function (){
@@ -68,18 +57,23 @@ function startGame(event){
 	document.onkeypress = function(event){
 		event.key = event.key.toLowerCase();
 		correctGuess(event);
-		alreadyGuessed(event);
 		wrongGuess(event);
-	}
-	function winCounting(event){
-		if (win = true){
-			console.log("win");
-			alert("You Win!");
-			wins++;
-			document.getElementById("wins").textContent = wins;
-		}
+		winCounting(event);
+		alreadyGuessed(event);
 	}
 };
+
+//function that turns the length of the word in play into underscores//
+function underscore(){
+	for (i = 0; i < wordInPlay.length; i++){
+		var underscore = document.createElement("span");
+		underscore.textContent = "_";
+		playArea.push(underscore);
+		hangmanWord.appendChild(underscore);
+		var newId = "underscore" + [i]
+		playArea[i].setAttribute("id", newId);
+	}
+}
 
 //this function is all about the win condition, it displays correctly guessed letters successfully, but doesn't apply the win condition properly, if you put in a correctly guessed letter twice it will count that point twice, meaning it's possible to win by typing one letter many times//
 var counter = 0;
@@ -99,24 +93,37 @@ function correctGuess(event){
 	}
 }
 
-//this function is all about losing, it came close, but it iterates on every letter every time, meaning you may be correct for one letter of the word but not for the others, therfore each correct letter could be worth 1 correct and 4 or 5 wrongs//
+//this function is all about losing, it's supposed to count down the wrong guesses by one per input but right now it is including correct guesses for some reason//
 function wrongGuess(event){
-	for(i = 0; i < 1; i++){
-		if (event.key === wordInPlay[i]){
-			hangmanGuesses = hangmanGuesses;
-		} else if (event.key !== wordInPlay[i]){
-			console.log("incorrect");
-			hangmanGuesses = hangmanGuesses - 1;
-			document.getElementById("hangman-guesses").textContent = hangmanGuesses;
+	for(i = 0; i < wordInPlay.length; i++){
+		if (event.key !== wordInPlay[i]){
+			correct = false;
 		}
 	}
-	if (hangmanGuesses == 0){
-		console.log("lost")
-		alert("You Lost!");
+	if (correct === false){
+		console.log("incorrect")
+		hangmanGuesses--;
+		document.getElementById("hangman-guesses").textContent = hangmanGuesses;
+		if (hangmanGuesses === 0){
+			win = false;
+		}
 	}
 };
 
-//this function is supposed to display all my already guessed letters in an area of the page, but right now it repeats letters
+//I made the win and lose events their own separate function so that I could focus on fixing the win/lose conditions in my input functions//
+function winCounting(event){
+		if (win === true){
+			console.log("win");
+			alert("You Win!");
+			wins++;
+			document.getElementById("wins").textContent = wins;
+		} else if (win === false){
+			console.log("lose");
+			alert("You Lose!");
+		}
+	}
+
+//this function is supposed to display all my already guessed letters in an area of the page, but right now it repeats letters//
 function alreadyGuessed(event){
 	for(i = 0; i < 1; i++){
 		if(event.key !== previousGuesses.innerHTML[i]){
