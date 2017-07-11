@@ -8,6 +8,8 @@ var hangmanCounter = document.getElementById("hangman-counter");
 var hangmanGuesses = 12;
 var guessArea = document.getElementById("guess-area");
 var previousGuesses = document.getElementById("previous-guesses");
+var winCounter = document.getElementById("win-counter");
+var wins = 0;
 var newWord = document.getElementById("new-word");
 var wordArray = [
 	"apple",
@@ -31,6 +33,7 @@ hangmanWord.style.display = "none";
 hangmanCounter.style.display = "none";
 guessArea.style.display = "none";
 newWord.style.display = "none";
+winCounter.style.display = "none";
 
 //something that turns the length of the word into underscores//
 function underscore(){
@@ -57,11 +60,14 @@ function startGame(event){
 	hangmanCounter.style.display = "block";
 	document.getElementById("hangman-guesses").textContent = hangmanGuesses;
 	guessArea.style.display = "block";
+	winCounter.style.display = "block";
+	document.getElementById("wins").textContent = wins;
 	newWord.style.display = "block";
 	underscore(event);
 };
 
-//correct guesses get displayed//
+//this function is all about the win condition, it displays correctly guessed letters successfully, but doesn't apply the win condition properly, if you put in a correctly guessed letter twice it will count that point twice, meaning it's possible to win by typing one letter many times//
+var counter = 0;
 function correctGuess(event){
 	console.log(event.key);
 	for(i = 0; i < wordInPlay.length; i++){
@@ -69,36 +75,37 @@ function correctGuess(event){
 		if (event.key === wordInPlay[i]){
 			console.log("correct");
 			letter.textContent = wordInPlay[i];
+			counter++;
+			console.log("counter:"+counter);
 		}
+	}
+	if (counter === wordInPlay.length){
+		console.log("win");
+		alert("You Win!");
+		wins++;
+		document.getElementById("wins").textContent = wins;
 	}
 }
 
-//wrong guesses cound down//
+//this function is all about losing, it came close, but it iterates on every letter every time, meaning you may be correct for one letter of the word but not for the others, therfore each correct letter could be worth 1 correct and 4 or 5 wrongs//
 function wrongGuess(event){
 	for(i = 0; i < 1; i++){
-		if (event.key !== wordInPlay[i]){
+		if (event.key === wordInPlay[i]){
+			hangmanGuesses = hangmanGuesses;
+		} else if (event.key !== wordInPlay[i]){
 			console.log("incorrect");
-			hangmanGuesses--;
+			hangmanGuesses = hangmanGuesses - 1;
 			document.getElementById("hangman-guesses").textContent = hangmanGuesses;
 		}
-		if (hangmanGuesses == 0){
-			console.log("lost")
-			alert("You Lost!");
-		}
+	}
+	if (hangmanGuesses == 0){
+		console.log("lost")
+		alert("You Lost!");
 	}
 };
 
-/*function winOrLose(){
-	for(i = 0; i < wordInPlay.length; i++){
-		var playWord = document.getElementById("underscore"+i).textContent;
-	}
-	if (playWord === wordInPlay){
-		console.log("win");
-	}
-}*/
-
+//this function is supposed to display all my already guessed letters in an area of the page, but right now it repeats letters
 function alreadyGuessed(event){
-	console.log("counter works");
 	for(i = 0; i < 1; i++){
 		var keyIn = document.createElement("span");
 		if(event.key !== guessedArray[i]){
@@ -109,16 +116,15 @@ function alreadyGuessed(event){
 	}
 }
 
-//all functions based on key presses//
+//all functions based on key presses go under here//
 document.onkeypress = function(event){
 	event.key = event.key.toLowerCase();
 	correctGuess(event);
-	/*winOrLose(event);*/
 	alreadyGuessed(event);
 	wrongGuess(event);
 }
 
-//click to get a new word//
+//this button is supposed to reset just the word using javascript so that the game can be played offline, but it doesn't successfuly remove the word that's already there with a new array with a new length, it keeps the old length which makes the blank area way too big or small depending on the word//
 newWord.onclick = function reStartGame(event){
 	console.log("this button works");
 	j = Math.floor(Math.random() * wordArray.length);
@@ -129,6 +135,7 @@ newWord.onclick = function reStartGame(event){
 	}
 }
 
+//this code was meant to be put in the button above, but it never achieved its function of turning a new word from the array into underscores and displaying them properly//
 /*var newUnderscore = document.createElement("span");
 	newUnderscore.textContent += "_";
 	newPlayArea.push(newUnderscore);
