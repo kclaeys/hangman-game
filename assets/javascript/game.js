@@ -23,8 +23,6 @@ var wordArray = [
 	];
 var j = Math.floor(Math.random() * wordArray.length)
 var wordInPlay = wordArray[j];
-var playArea = [];
-var newPlayArea = [];
 var correct = null;
 var win = null;
 
@@ -55,7 +53,6 @@ function startGame(event){
 	underscore(event);
 	//all functions based on key presses go under here//
 	document.onkeypress = function(event){
-		event.key = event.key.toLowerCase();
 		correctGuess(event);
 		wrongGuess(event);
 		winCounting(event);
@@ -67,11 +64,10 @@ function startGame(event){
 function underscore(){
 	for (i = 0; i < wordInPlay.length; i++){
 		var underscore = document.createElement("span");
-		underscore.textContent = "_";
-		playArea.push(underscore);
-		hangmanWord.appendChild(underscore);
 		var newId = "underscore" + [i]
-		playArea[i].setAttribute("id", newId);
+		underscore.setAttribute("id", newId);
+		underscore.textContent = "_";
+		hangmanWord.appendChild(underscore);
 	}
 }
 
@@ -130,19 +126,22 @@ function alreadyGuessed(event){
 	}
 }
 
-//this button is supposed to reset just the word using javascript so that the game can be played offline, but it doesn't successfuly remove the word that's already there with a new array with a new length, it keeps the old length which makes the blank area way too big or small depending on the word//
+//this button is supposed to reset just the word using javascript so that the game can be played offline, but it isn't fully functional//
 newWord.onclick = function reStartGame(event){
+	hangmanGuesses = 12;
+	previousGuesses.innerHTML = "";
+	document.getElementById("hangman-guesses").textContent = hangmanGuesses;
+	win = null;
+	for (i = 0; i < wordInPlay.length; i++){
+		hangmanWord.innerHTML = "";
+		console.log("this button's for loop works")
+	}
 	j = Math.floor(Math.random() * wordArray.length);
 	wordInPlay = wordArray[j];
-	function newUnderscore(event){
-		for (i = 0; i < wordInPlay.length; i++){
-			console.log("this button works");
-			var underscore = document.createElement("span");
-			underscore.textContent = "_";
-			newPlayArea.push(underscore);
-			hangmanWord.appendChild(underscore);
-			var newId = "underscore" + [i]
-			newPlayArea[i].setAttribute("id", newId);
-		}
-	}
+	underscore(event);
+	correctGuess(event);
+	wrongGuess(event);
+	winCounting(event);
+	alreadyGuessed(event);
+	console.log("this button works");
 }
