@@ -25,7 +25,7 @@ var j = Math.floor(Math.random() * wordArray.length)
 var wordInPlay = wordArray[j];
 var playArea = [];
 var newPlayArea = [];
-var guessedArray = [];
+var win = null;
 
 //load state//
 hangmanPrompt.textContent = "Press any key to get started!";
@@ -39,7 +39,7 @@ winCounter.style.display = "none";
 function underscore(){
 	for (i = 0; i < wordInPlay.length; i++){
 		var underscore = document.createElement("span");
-		underscore.textContent += "_";
+		underscore.textContent = "_";
 		playArea.push(underscore);
 		hangmanWord.appendChild(underscore);
 		var newId = "underscore" + [i]
@@ -64,6 +64,21 @@ function startGame(event){
 	document.getElementById("wins").textContent = wins;
 	newWord.style.display = "block";
 	underscore(event);
+	//all functions based on key presses go under here//
+	document.onkeypress = function(event){
+		event.key = event.key.toLowerCase();
+		correctGuess(event);
+		alreadyGuessed(event);
+		wrongGuess(event);
+	}
+	function winCounting(event){
+		if (win = true){
+			console.log("win");
+			alert("You Win!");
+			wins++;
+			document.getElementById("wins").textContent = wins;
+		}
+	}
 };
 
 //this function is all about the win condition, it displays correctly guessed letters successfully, but doesn't apply the win condition properly, if you put in a correctly guessed letter twice it will count that point twice, meaning it's possible to win by typing one letter many times//
@@ -80,10 +95,7 @@ function correctGuess(event){
 		}
 	}
 	if (counter === wordInPlay.length){
-		console.log("win");
-		alert("You Win!");
-		wins++;
-		document.getElementById("wins").textContent = wins;
+		win = true
 	}
 }
 
@@ -107,38 +119,25 @@ function wrongGuess(event){
 //this function is supposed to display all my already guessed letters in an area of the page, but right now it repeats letters
 function alreadyGuessed(event){
 	for(i = 0; i < 1; i++){
-		var keyIn = document.createElement("span");
-		if(event.key !== guessedArray[i]){
-			keyIn.textContent += event.key
-			guessedArray.push(keyIn);
-			previousGuesses.appendChild(keyIn);
+		if(event.key !== previousGuesses.innerHTML[i]){
+			previousGuesses.innerHTML += event.key;
 		}
 	}
 }
 
-//all functions based on key presses go under here//
-document.onkeypress = function(event){
-	event.key = event.key.toLowerCase();
-	correctGuess(event);
-	alreadyGuessed(event);
-	wrongGuess(event);
-}
-
 //this button is supposed to reset just the word using javascript so that the game can be played offline, but it doesn't successfuly remove the word that's already there with a new array with a new length, it keeps the old length which makes the blank area way too big or small depending on the word//
 newWord.onclick = function reStartGame(event){
-	console.log("this button works");
 	j = Math.floor(Math.random() * wordArray.length);
 	wordInPlay = wordArray[j];
-	for (i = 0; i < wordInPlay.length; i++){
-		hangmanWord.removeChild(document.getElementById("underscore"+i));
-		console.log("forloop works");
+	function newUnderscore(event){
+		for (i = 0; i < wordInPlay.length; i++){
+			console.log("this button works");
+			var underscore = document.createElement("span");
+			underscore.textContent = "_";
+			newPlayArea.push(underscore);
+			hangmanWord.appendChild(underscore);
+			var newId = "underscore" + [i]
+			newPlayArea[i].setAttribute("id", newId);
+		}
 	}
 }
-
-//this code was meant to be put in the button above, but it never achieved its function of turning a new word from the array into underscores and displaying them properly//
-/*var newUnderscore = document.createElement("span");
-	newUnderscore.textContent += "_";
-	newPlayArea.push(newUnderscore);
-	hangmanWord.appendChild(newUnderscore);
-	var newId = "underscore" + [i];
-	newPlayArea[i].setAttribute("id", newId);*/
