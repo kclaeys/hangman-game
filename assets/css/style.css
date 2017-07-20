@@ -1,7 +1,3 @@
-[id^=underscore] {
-    margin-right: 1px;
-}
-
 .hide {
-    display: none;
+    visibility: hidden;
 }
